@@ -1,0 +1,202 @@
+---
+title: "Final Project Presentation"
+author: "Gabriela Constantin-Dureci"
+institute: "Rutgerst University, Department of Spanish and Portuguese"
+date: "04/21/2021"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# Presentation Outline
+
+--
+
+- Research Idea 
+
+--
+
+- Background Information 
+
+--
+
+- Research Questions 
+
+--
+
+- Methodology 
+
+ - Participants
+ - Tasks
+
+--
+
+- Data
+
+--
+
+- Visualization of the Data and Analysis
+
+--
+
+- Results
+
+--
+
+- Conclusion
+
+--
+
+- References
+
+---
+This is what the steps for a proposal might look for many...
+
+--
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::include_graphics("./Images/Steps Proposal.jpg")
+
+```
+---
+
+For me, it was more like this:
+
+--
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::include_graphics("./Images/Gabby's Steps.PNG")
+
+```
+---
+# Research Idea
+
+--
+
+- I wanted to:
+
+ - relate this project to another proposal I am developing
+ 
+ - include a sociolinguistics component
+
+--
+
+- Codeswitching (CS) among Romanian-Spanish bilinguals in Spain
+ 
+--
+ 
+ - I will look at four variables: 
+ 
+     - Frequency of CS, 
+     
+     - Generation Status,
+     
+     - Proficiency in Romanian(1),
+     
+     - Gender
+     
+(1) I am looking only at Proficiency in Romanian to align with Torres and Potowski's (2016) methodology.
+---
+#Background information
+
+--
+
+- CS - the practice of using more than one language or language variety in discourse (Poplack, 1980)
+
+- Although CS is a prevalent practice in bilingual communities, it falls under *nonstandardized language practices* and it is often stigmatized.
+
+- large community of Romanians in Spain 
+ -  Romanian-Spanish bilingualism is prevalent
+ 
+- studies on Romanian-Spanish bilinguals in Spain are scarce
+
+--
+
+- **Labov' Gender Paradox**
+
+ - a sociolinguistic phenomenon 
+  - Women conform more closely than men to sociolinguistic norms that are overtly prescribed, but conform less than men when they are not. 
+  - Women are more likely to use prestige forms and avoid stigmatized variants than men for a majority of linguistic variables, but that they are also more likely to lead language change by using innovative forms of variables.
+
+---
+#Disclaimer
+
+--
+
+While I acknowledge that gender is fluid, for the purposes of this proposal, I am limiting myself to traditional dichotomies of gender (male/female) in order to be able to test the predictions of the Gender Paradox.
+
+--
+
+More research that includes gender-non-conforming participants is highly needed!
+
+---
+#Research Questions
+
+--
+
+**RQ 1.** Does gender influence frequency of CS?
+
+--
+
+**RQ 2.** Does generation status influence frequency of CS?
+
+--
+
+**RQ 3.** Does proficiency in Romanian influence frequency of CS?
+
+---
+#Methodology (1)
+--
+
+## Participants
+
+- two generations of Romanian-Spanish bilinguals 
+
+ - Generation 1 (G1) bilinguals: born in Romania and immigrated to Spain as adults (i.e., after age 18)
+ 
+ - Generation 2 (G2) bilinguals: born to at least one G1 parent
+ 
+     - born in Spain
+     
+     - born in Romania and immigrated to Spain before age 9 (see Torres & Potowski, 2016)
+     
+---
+ 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::include_graphics("./Images/Participants.PNG")
+
+```
+---
+#Methodology (2)
+--
+
+##Tasks
+
+- In order to assess participants' CS frequency, they will take the Assessment of Code-Switching Experience Survey (ACSES; Blackburn, 2013)
+ - They will be divided into *High* frequency code-switchers and *Low* frequency code-switchers
+
+- Participants' proficiency will be assessed via the Boston Naming Test (BNT; Kaplan, Goodglass, and Weintraub, 1983) in both Romanian and Spanish. 
+ - The BNT contains 60 outline drawings of objects and animals, which I will divide into two blocks, a Romanian one and a Spanish one, with thirty images per block (see Guzzardo-Tamargo et al., 2016, for a similar methodology regarding the administration of the BNT).
+ 
+- Participants will also complete a **Language History Questionnaire**.
+
+---
+#Descriptive Statistics for Sample
+
+--
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+Data<-read.csv("./Data/Data_Raw/Dataset_Raw.csv")
+library(tidyverse)
+Descriptive<-Data %>% 
+  group_by(Generation) %>%  
+  summarize(mean_Proficiency=mean(Proficiency), sd_Proficiency=sd(Proficiency),
+            range_Proficiency=range(Proficiency))
+
+knitr::kable(head(Descriptive), format="html")
+
+```
