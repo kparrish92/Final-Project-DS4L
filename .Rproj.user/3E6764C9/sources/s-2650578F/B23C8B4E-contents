@@ -1,0 +1,218 @@
+---
+title: "Programming Assignment 5"
+author: "Gabriela Constantin-Dureci"
+date: "3/31/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Walthrough of PA 5
+
+Buckle your seatbelts, everyone, because we are going on a bumpy Ride. 
+
+(Yes, the R is capitalized on purpose.) 
+
+You are going to read the captivating story of how yours truly, Gabby, will complete the last programming assignment. 
+
+The instructions for the assignment are included below so we can all follow each step more easily. Think of them as chapters in this Riveting stoRy.
+
+### **1. Get the latest version of programming_assignments, i.e., fetch the newest changes to update your local repo.**
+
+*Gabby completes this step!*
+
+### **2. Create a new project in RStudio called pa5. Inside your new project, create two folders: data_raw and data_clean.**
+
+*She completes this step too!*
+
+
+### **3. Download the dataset available here and store the entire folder in data_raw.**
+
+*She completes this step too!*
+
+### **4. Create a new RMarkdown file called index.Rmd and save it at the root level of your project (i.e., inside pa5). In the yaml front matter make sure to give your document an informative title, to include your name, and to set the output to html_document (this should be the default, if not, you may have made a mistake).**
+
+*She completes this step too!*
+
+*And then, she realizes, she is talking in the third person...That is a bit weird... So, let's change the narratorial perspective!*
+
+### **5. Load the dataset from your index.Rmd file. Pay special attention to the path. Don’t forget where the .csv file lives. Print the first 6 rows of the dataframe.**
+
+I load the dataset. I use the following code: *data_raw <- read_csv("./data_raw/lang_data_raw.csv")*.
+
+Then, I will be honest, I do not remember what the code for printing the first six rows of the dataframe, so I do a quick old Google search and I find this website that provides me with the answer:https://stackoverflow.com/questions/25655525/how-to-print-an-certain-amount-of-rows-from-a-read-table-in-r-studio
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+data_raw <- read_csv("./data_raw/lang_data_raw.csv")
+
+head(data_raw[1:6,])
+
+```
+
+### **6. Tidy the dataset. Keep in mind the principles of tidy data. Use sections, text, comments, etc. to explain every step of the process.**
+
+Time to look at the data. What I first notice is that the **id** column contains three variables (participant number/id, traditional binary gender, and age group). This is pretty untidy, so I should fix it! I review the slides from class, specifically the ones about *untidy data* and I find THE slide that offers a very similar case as this one: https://www.osrrl.jvcasillas.com/slides/06_tv2/index.html#50. Therefore, I use the function *separate*.
+
+My code is: separate(col = id, into = c('id', 'gender', 'age'),sep = "_")
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+first_data<-data_raw %>% 
+  separate(col = id, 
+           into = c('id', 'gender', 'age'), 
+           sep = "_")
+```
+Now my dataset looks like this:
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+head(first_data[1:6,])
+
+```
+That is still not tidy enough because I have more than one observation per row. In this case, I should use *pivot_longer*.
+
+So, let me use do that. 
+
+But, wait a minute... 
+
+I happen to read ***Step 7*** and I see that I have to create a new column. My instinct tells me it's easier to just do it now than after I've used *pivot_longer*. So, I use the function *mutate* to create a new column.  The code I use is: **mutate(first_data, composite_score=log(iq / 80) + log(motivation))**
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+second_data<- first_data %>%
+  mutate(first_data, composite_score=log(iq / 80) + log(motivation))
+```
+
+Now, let's finally go back to *pivot_longer*.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+tidy_data<-second_data %>% 
+  pivot_longer(., cols = c("iq", "motivation","prof", "composite_score"), 
+                  names_to = "variables", values_to = "score")
+```
+
+Now my dataset looks like this:
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+head(tidy_data[1:6,])
+
+```
+
+### **7. Create a new column in the dataset for the composite language learning score by taking the log of iq divided by 80 plus the log of motivation. Call this variable composite_score.**
+
+I already did that! Refer to Step 6 (or Chapter 6, for literary enthusiasts). 
+
+P.S. I also, realize that, for the purposes of this assignment, I do not need to tidy the data with *pivot_longer*, but alas, I practiced at least.
+
+
+### **8. Provide a table of descriptive statistics. You decide what is relevant based on the variables you have and your hypotheses. Include any observations you can make from the table.**
+
+I go back to the assignment description. One thing that we're supposed to examine is whether proficiency scores vary as a function of age (younger/older), so I group the data by age and then provide descriptive statistics for proficiency, namely: mean, standard deviation, and range.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+descriptive_stats<-second_data %>% 
+  group_by(age) %>% 
+    summarize(mean_proficiency=mean(prof), sd_proficiency=sd(prof), range_proficiency=range(prof))
+      
+knitr::kable(head(descriptive_stats),
+ col.names = c("Age Group", "Mean Proficiency", "SD Proficiency", "Range Proficiency"),
+      caption = "Table 1. Descriptive statistics")
+```
+---
+By looking at the proficiency range, I can see that *older* participants' range has lower values at both ends (0.17 and 0.89) compared to *younger* participants (0.39 and 0.98). This would suggest that those who learn a language at a *younger* age, tend to have higher proficiency than those who learn it at an *older* age. 
+---
+
+### **9. Create an informative plot of the data. You only get one plot, so make it count. Keep in mind the types of variables that you have, particularly those that are relevant to your hypotheses. Interpret the plot (in prose).**
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+second_data %>% 
+  ggplot(.,aes(x=composite_score, y=prof, color = age))+
+  geom_jitter()+
+  geom_smooth(method = lm)+
+  labs(x="Language Aptitude", y="Proficiency")+
+  theme_bw(base_size=15)
+
+```
+
+I decide to make a plot that shows Proficiency as a function of Language Aptitude (e.g.,the composite score) for the two age groups (older and younger).
+What the plot shows us is that there is a positive correlation between Proficiency and Language Aptitude for both groups, which means that as Language Aptitude increases so does Proficiency. 
+
+I am also curious how strong the linear association between Proficiency and Language Aptitude is, so I run a *cor*  to see what the correlation coefficient is. 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+cor(second_data$prof, second_data$composite_score)
+```
+
+It's 0.49, which is pretty good! 
+
+### **10. Again, you are interested in determining if proficiency scores vary as a function of age and composite_score. Fit the appropriate model. Test the two-way interaction, the main effect of age, and the main effect of composite_score.**
+
+This is where I start thinking a bit more in depth about what I have to do. So, I promptly go back to the slides from class. The ones about nested models, to be exact (https://www.ds4ling.jvcasillas.com/slides/05_lm/03_mrc/index.html#117). How do I decide to look at the slides with nested models? Because in the rubric for this PA, there is a mention of that, so I figure "Why would there be a score for it if we aren't supposed to do it?!" I hope I'm not wrong.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+mod_full <- lm(prof ~ composite_score + age + composite_score:age, data = second_data)# inclusive model
+mod_int  <- lm(prof ~ composite_score + age, data = second_data) # restricted model
+mod_CS <- lm(prof ~ composite_score                 , data = second_data) # restricted model
+mod_age   <- lm(prof ~ age               , data = second_data) # restricted model
+mod_null <- lm(prof ~ 1                  , data = second_data) # null model
+```
+
+I create the nested models, as explained in the class slides. And then, I test for main effects using the anova function.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+anova(mod_int,mod_full)#Test interaction effect
+```
+There is a significant interaction of Language Aptitude (composite_score) and Age: (F(1) = 9.8, p < 0.002).**
+
+So, I figure that the best model is the inclusive model. This means that Proficiency varies as a function of Age and Language Aptitude.
+
+### **11. Print a summary of the best model and test that the model assumptions have been met (you can use plots for this, but you are not required to include them in the final version of your assignment).**
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+summary(mod_full)
+
+```
+### **12. Write up the results. You should include a description of the statistical analyses you have done in one paragraph, and the actual results in another. Don’t forget to include an overall assessment of goodness of fit (variance explained).**
+
+*Statistical analysis*
+Data from the task were analyzed in R. For this dataset, I used nested models comparisons to find the best fitting model, as well as to check for main effects and interactions (using the anova function).
+Participants' *proficiency scores* were the dependent variable and their *age group* and *language aptitude* as independent variables. Language aptitude was operationalized and calculated as a composite measure of iq and motivation (composite_score=log(iq / 80) + log(motivation)).
+
+
+*Results*
+
+The model revealed a main effect for both age (p<0.001) and language aptitude(p<0.001), as well as an interaction between the two *age* and *language aptitude* (p<0.001). 
+
+
+**DISCLAIMER!**
+I am not sure I reported the results well. This is something that I need to keep working on!
+
+### **13. Once you have finished steps 1-12, make sure your documents will knit successfully. Reread that last sentence. Host your project in a private GitHub repo (call it pa5), and share it with me (jvcasillas). You can share a private repo from the settings tab on github.com. You do not need to make it a website.**
+
+I got to step 13, yay! Let's keep going, I'm almost there!
+
+P.S. I reread the sentence. "Documents" is in the plural. 
+
+### **14. Create a new folder in your programming_assignments dropbox folder. Include a README.md file with a link to your repo (just the repo, not a website).**
+
+### **15. Celebrate. You survived.**
+
+*Yay!* 
+*Gabby gets happy! She wants to celebrate!*
+*But then... she remembers...*
+*"There is still so much more left to get done this semester"*
+*She sighs!*
+*Oh, well, she can at least rest.*
+
+# *THE END!*
+
+
+
+---

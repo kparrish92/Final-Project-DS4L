@@ -190,7 +190,16 @@ knitr::include_graphics("./Images/Participants.PNG")
 --
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("./Images/Descriptives.PNG")
+library(tidyverse)
+library(here)
+Data<-read.csv(here("Data", "Data_Raw", "Dataset_Raw.csv"))
+
+Descriptive<-Data %>% 
+  group_by(Generation) %>%  
+  summarize(Proficiency_Mean=mean(Proficiency), Proficiency_SD=sd(Proficiency),
+            Proficiency_Range=range(Proficiency))
+
+knitr::kable(head(Descriptive), format="html")
 ```
 ---
 #Data (1)
@@ -208,7 +217,9 @@ The dataset looked like this:
 --
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("./Images/Dataset.PNG")
+library(here)
+Data<-read.csv(here("Data", "Data_Raw", "Dataset_Raw.csv"))
+head(Data[1:6,])
 ```
 --
 
@@ -270,7 +281,12 @@ For frequency of CS, I coded *frequent switchers* with 1 and *infrequent switche
 --
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("./Images/Plot.PNG")
+library(here)
+Data<-read.csv(here("Data", "Data_Raw", "Dataset_Raw.csv"))
+Data %>% 
+  ggplot(.,aes(x=Proficiency , y = Frequency_CS, color = Gender)) +
+  facet_grid(.~Generation)+
+  geom_smooth(method= "glm", method.args=list(family="binomial"))
 ```
 ---
 #Preliminary Analysis
@@ -296,8 +312,14 @@ These are the models that I am fitting.
 
 --
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::include_graphics("./Images/Anova_Results.PNG")
-
+library(here)
+Data<-read.csv(here("Data", "Data_Raw", "Dataset_Raw.csv"))
+mod_null<- glm(Frequency_CS ~ 1, family= binomial(link="logit"), data = Data)
+mod_generation<-glm(Frequency_CS ~ 1 + factor(Generation), family= binomial(link="logit"), data = Data)
+mod_proficiency<- glm(Frequency_CS ~ 1 + Proficiency, family= binomial(link="logit"), data = Data)
+mod_gender<- glm(Frequency_CS ~ 1 + Proficiency + Gender, family= binomial(link="logit"), data = Data)
+mod_int<-glm(Frequency_CS ~ 1 + Proficiency*Gender,family= binomial(link="logit"), data = Data)
+anova(mod_null,mod_proficiency, mod_gender, test="Chisq")
 ```
 ---
 

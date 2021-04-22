@@ -3,7 +3,7 @@
     "path": "C:/Users/gcons/Desktop/R Stuff/Final-Project-DS4L/Slides/Slides_trial and error.Rmd",
     "project_path": "Slides/Slides_trial and error.Rmd",
     "type": "r_markdown",
-    "hash": "583333028",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1619106498513.0,
@@ -11,14 +11,16 @@
     "relative_order": 2,
     "properties": {
         "source_window_id": "",
-        "Source": "Source"
+        "Source": "Source",
+        "cursorPosition": "192,0",
+        "scrollLine": "182"
     },
     "folds": "",
-    "lastKnownWriteTime": 1619092304,
+    "lastKnownWriteTime": 1619108318,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1619092304,
+    "last_content_update": 1619108318171,
     "read_only": false,
     "read_only_alternatives": []
 }
