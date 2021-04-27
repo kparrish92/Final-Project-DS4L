@@ -1,0 +1,58 @@
+Titanic<-read.csv(here("Data", "titanic.csv"))
+library(tidyverse)
+library(here)
+
+
+Data<-read.csv(here("Data", "Data_Raw", "Dataset_Raw.csv"))
+# 2. Get to know the data (how many columns? what do they represent?)
+
+glimpse(Titanic)
+dim(titanic)
+summary(titanic)
+
+# 3. Think of 2 hypotheses you could test
+
+
+#H1. "Women and children first?"
+# H2. 1st class saved more?
+
+
+# 4.. Attempt to plot the data (include model fit)
+Titanic %>% 
+  ggplot(.,aes(x= Age, y = Survived, color = Sex)) +
+  facet_grid(.~Pclass)+
+  geom_smooth(method= "glm", method.args=list(family="binomial"))
+
+
+
+#5. Fit the appropriate models to test your hypotheses
+
+mod_null<- glm(Survived ~ 1, family= binomial(link="logit"), data = Titanic)
+mod_class<-glm(Survived ~ 1 + factor(Pclass), family= binomial(link="logit"), data = Titanic)
+mod_age<- glm(Survived ~ 1 + Age, family= binomial(link="logit"), data = Titanic)
+mod_sex<- glm(Survived ~ 1 + Age + Sex, family= binomial(link="logit"), data = Titanic)
+mod_int<-glm(Survived ~ 1 + Age*Sex,family= binomial(link="logit"), data = Titanic)
+
+anova(mod_null,mod_age, mod_sex, test="Chisq")
+
+summary(mod_null)
+mean(titanic$Survived)
+summary(mod_age)
+summary(mod_sex)
+
+
+
+1-plogis(
+  0.59380 + -1.31775, #intercept + (males)
+  0.01970 + -0.04112 * 0, #age
+  
+  
+)
+
+
+
+# helpers
+# method.args = list(family = "binomial")
+# lingStuff::inv_logit()
+# inv_logit_manual <- function(x){1 / (1 + exp(-x))}
+# inv_logit_manual(coef(mod)[1] + coef(mod)[2] * mean(data$col))

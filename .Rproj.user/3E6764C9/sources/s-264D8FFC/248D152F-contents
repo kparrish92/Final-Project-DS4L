@@ -1,0 +1,122 @@
+---
+title             : "Frequency of code-switching in Romanian-Spanish bilinguals"
+shorttitle        : "Final Paper, Data Science for Linguistics, Spring 2021"
+
+author: 
+  - name          : "Gabriela Constantin-Dureci"
+ 
+
+bibliography      : ["r-references.bib"]
+
+floatsintext      : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : yes
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r setup, include = FALSE}
+library("papaja")
+r_refs("r-references.bib")
+```
+
+```{r analysis-preferences}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+```
+
+
+# Introduction
+
+- In this paper, I am focusing on a specific bilingual community, namely Romanian-Spanish bilinguals in Spain. Although there is a large community of Romanians in Spain, which leads to prevalent Romanian-Spanish bilingualism, studies on Romanian-Spanish bilinguals in Spain are scarce. 
+
+- Code-switching (CS) is a common practice in bilingual communities across the world. In this paper, I am defining CS as the practice of using more than one language or language variety in discourse (see Poplack, 1980). 
+
+- Labov' Gender Paradox is a sociolinguistic phenomenon which states that Women conform more closely than men to sociolinguistic norms that are overtly prescribed, but conform less than men when they are not.
+Women are more likely to use prestige forms and avoid stigmatized variants than men for a majority of linguistic variables, but that they are also more likely to lead language change by using innovative forms of variables.
+This sociolinguistic phenomenon is important for the present study, given that CS is considered a nonstandardized practice and is, therefore, stigmatized by prescriptive ideologies of language use.
+
+# Research Questions
+
+**RQ 1.** Does gender influence frequency of CS?
+
+**RQ 2.** Does generation status influence frequency of CS?
+
+**RQ 3.** Does proficiency in Romanian influence frequency of CS?
+
+# Methods
+In this section, I report my sample, materials, procedure, and data analysis.
+
+## Participants
+
+One hundred eighty seven participants (72 female-identifying) completed this study. Since one of the research questions of this study targets bilinguals' generation status, the participants were further categorized in their respective groups. Specifically, one hundred and two participants belonged to the first generation (G1) group (41 female-identifying) and eighty five formed the second generation (G2) group (54 male-identifying). 
+Generation 1 (G1) bilinguals were born in Romania and immigrated to Spain as adults (i.e., after age 18) and Generation 2 (G2) bilinguals were born to at least one G1 parent. Therefore, G2 bilinguals could have either been born in Spain or born in Romania and immigrated to Spain before age 9 (see Torres & Potowski, 2016).
+
+Descriptive statistics for the participant sample are offered in Table 1.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(here)
+
+Data<-read.csv(here("Data", "Data_Raw", "Dataset_Raw.csv"))
+
+Descriptive<-Data %>% 
+  group_by(Generation) %>%  
+  summarize(Proficiency_Mean=mean(Proficiency), Proficiency_SD=sd(Proficiency),
+            Proficiency_Range=range(Proficiency))
+
+knitr::kable(head(Descriptive), format="pandoc")
+```
+
+
+## Materials
+- The short version of the Assessment of Code-Switching Experience Survey (ACSES; Blackburn, 2013) was used to assess participants' CS frequency. After reviewing their results on the ACSES, participants were further categorized as High frequency code-switchers (117 participants; 46 female-identifying; 52 G1) and Low frequency switchers (70 participants; 44 male-identifying; 20 G2).
+
+- Participants' proficiency was assessed via the Boston Naming Test (BNT; Kaplan, Goodglass, and Weintraub, 1983) in Romanian.The BNT contains 60 outline drawings of objects and animals.
+
+- Participants also completed a Language History Questionnaire in order to gather socio-biographical data.
+
+## Procedure
+Participants first completed the proficiency assessment, followed by the ACSES. The Language History Questionnaire was administered last.
+
+## Data analysis
+
+The data were analyzed in R using a generalized linear mixed-effects model with a binomial linking function. The model included *frequency of codeswitching* as the dependent variable and *proficiency in Romanian*, *generation status* and *participants' gender* as fixed factors. High frequency of CS was coded as "1" and low frequency of CS was coded as "0". Significance of main effects and all possible interactions were examined using hierarchical partitioning of the variance via nested model comparisons.
+
+Lastly, I used `r cite_r("r-references.bib")` for all the analyses.
+
+
+# Results
+
+The two panels in *Figure 1* show the CS frequency of participants as a function of Romanian language proficiency, as well as generation (G1 or G2) and gender (female or male). 
+The model that examined frequency of CS as a factor of proficiency provided the best fit. Moreover, the model revealed an effect of proficiency with p=0.0007759.
+A visual analysis of the plots shows that for G1 participants, frequency of CS decreased as proficiency increased for both female and male participants. However, for G2 male participants, frequency of CS increased with proficiency, while for G2 female participants it decreased. 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+Data %>% 
+  ggplot(.,aes(x=Proficiency , y = Frequency_CS, color = Gender)) +
+  facet_grid(.~Generation)+
+  geom_smooth(method= "glm", method.args=list(family="binomial"))
+```
+
+# Discussion
+This study looked at Romanian-Spanish bilinguals' frequency of codeswitching as a function of proficiency in Romanian, gender, and generation. 
+
+\newpage
+
+# References
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id="refs" custom-style="Bibliography"></div>
+\endgroup

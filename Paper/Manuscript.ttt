@@ -1,0 +1,24 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:unnamed-chunk-1}}
+
+\begin{tabular}{llll}
+\toprule
+Generation & \multicolumn{1}{c}{mean\_Proficiency} & \multicolumn{1}{c}{sd\_Proficiency} & \multicolumn{1}{c}{range\_Proficiency}\\
+\midrule
+1 & 96.85 & 1.55 & 92.50\\
+1 & 96.85 & 1.55 & 100.69\\
+2 & 83.85 & 4.43 & 73.18\\
+2 & 83.85 & 4.43 & 96.03\\
+\bottomrule
+\end{tabular}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}

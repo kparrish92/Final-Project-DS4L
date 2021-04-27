@@ -179,8 +179,8 @@ knitr::include_graphics("./Images/Participants.PNG")
 - In order to assess participants' CS frequency, they will take the Assessment of Code-Switching Experience Survey (ACSES; Blackburn, 2013)
  - They will be divided into *High* frequency code-switchers and *Low* frequency code-switchers
 
-- Participants' proficiency will be assessed via the Boston Naming Test (BNT; Kaplan, Goodglass, and Weintraub, 1983) in both Romanian and Spanish. 
- - The BNT contains 60 outline drawings of objects and animals, which I will divide into two blocks, a Romanian one and a Spanish one, with thirty images per block (see Guzzardo-Tamargo et al., 2016, for a similar methodology regarding the administration of the BNT).
+- Participants' proficiency will be assessed via the Boston Naming Test (BNT; Kaplan, Goodglass, and Weintraub, 1983) in Romanian. 
+ - The BNT contains 60 outline drawings of objects and animals.
  
 - Participants will also complete a **Language History Questionnaire**.
 
